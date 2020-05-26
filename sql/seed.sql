@@ -1,4 +1,8 @@
 USE grocery_db;
+INSERT INTO users (username)
+VALUES ('johndoe'), ('janedoe');
 
-INSERT INTO groceries (name, quantity)
-VALUES ('milk', 2), ('bread', 3), ('eggs', 4), ('cheese', 5)
+INSERT INTO groceries (name, quantity, userid)
+VALUES ('bread', 3, 1), ('milk', 4, 1), ('eggs', 5, 1), ('apples', 6, 2), ('oranges', 7, 2), ('bananas', 8, 2);
+
+

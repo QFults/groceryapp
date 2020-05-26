@@ -6,6 +6,38 @@
   <title>Document</title>
 </head>
 <body>
-  
+  <form>
+    <p>
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username">
+    </p>
+    <button id="signIn">Sign In</button>
+  </form>
+  <hr>
+  <form>
+    <p>
+      <label for="grocery">Grocery:</label>
+      <input type="text" name="grocery" id="grocery">
+    </p>
+    <p>
+      <label for="quantity">Quantity</label>
+      <input type="number" name="quantity" id="quantity">
+    </p>
+    <button id="addGrocery">Add Grocery</button>
+  </form>
+  <hr>
+  <ul id="groceries"></ul>
+
+  <script>
+
+    document.getElementById('signIn').addEventListener('click', event => {
+      event.preventDefault()
+    })
+
+    document.getElementById('addGrocery').addEventListener('click', event => {
+      event.preventDefault()
+    })
+    
+  </script>
 </body>
 </html>
