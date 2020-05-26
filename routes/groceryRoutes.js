@@ -4,12 +4,12 @@ const db = require('../db')
 // Grocery Routes
 
 // GET all groceries
-router.get('/groceries', (req, res) => {
-  db.query('SELECT * FROM groceries', (err, groceries) => {
-    if (err) { console.log(err) }
-    res.json(groceries)
-  })
-})
+// router.get('/groceries', (req, res) => {
+//   db.query('SELECT * FROM groceries', (err, groceries) => {
+//     if (err) { console.log(err) }
+//     res.json(groceries)
+//   })
+// })
 
 // POST a grocery
 router.post('/groceries', (req ,res) => {

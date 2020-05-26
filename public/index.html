@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    #signOut {
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
-  <form>
+  <form id="signUpForm">
+    <p>
+      <label for="newUsername">New Username</label>
+      <input type="text" name="newUsername" id="newUsername">
+    </p>
+    <button id="signUp">Sign Up</button>
+  </form>
+  <form id="signInForm">
     <p>
       <label for="username">Username:</label>
       <input type="text" name="username" id="username">
     </p>
     <button id="signIn">Sign In</button>
   </form>
+  <button id="signOut">Sign Out</button>
   <hr>
   <form>
     <p>
@@ -26,18 +41,97 @@
     <button id="addGrocery">Add Grocery</button>
   </form>
   <hr>
-  <ul id="groceries"></ul>
+  <ol id="groceries"></ol>
 
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
+
+    const checkUser = () => {
+      if (localStorage.getItem('user')) {
+        axios.get(`/api/users/${localStorage.getItem('user')}`)
+          .then(({ data }) => {
+            
+            localStorage.setItem('user', data.user.id)
+
+            data.groceries.forEach(grocery => {
+              let groceryElem = document.createElement('li')
+              groceryElem.textContent = `
+              ${grocery.name} | Quantity: ${grocery.quantity}
+            `
+              document.getElementById('groceries').append(groceryElem)
+            })
+
+            document.getElementById('signUpForm').style.display = 'none'
+            document.getElementById('signInForm').style.display = 'none'
+            document.getElementById('signOut').style.display = 'block'
+          })
+          .catch(err => console.error(err))
+      }
+    }
 
     document.getElementById('signIn').addEventListener('click', event => {
       event.preventDefault()
+      axios.get(`/api/users/${document.getElementById('username').value}`)
+        .then(({ data }) => {
+
+          localStorage.setItem('user', data.user.id)
+
+          data.groceries.forEach(grocery => {
+            let groceryElem = document.createElement('li')
+            groceryElem.textContent = `
+              ${grocery.name} | Quantity: ${grocery.quantity}
+            `
+            document.getElementById('groceries').append(groceryElem)
+          })
+
+          document.getElementById('signUpForm').style.display = 'none'
+          document.getElementById('signInForm').style.display = 'none'
+          document.getElementById('signOut').style.display = 'block'
+        })
+        .catch(err => console.error(err))
     })
 
     document.getElementById('addGrocery').addEventListener('click', event => {
       event.preventDefault()
+      axios.post('/api/groceries', {
+        name: document.getElementById('grocery').value,
+        quantity: document.getElementById('quantity').value,
+        userid: parseInt(localStorage.getItem('user'))
+      })
+        .then(() => {
+          let groceryElem = document.createElement('li')
+          groceryElem.textContent = `
+              ${document.getElementById('grocery').value} | Quantity: ${document.getElementById('quantity').value}
+            `
+          document.getElementById('groceries').append(groceryElem)
+        })
+        .catch(err => console.error(err))
     })
-    
+
+    document.getElementById('signUp').addEventListener('click', event => {
+      event.preventDefault()
+      axios.post('/api/users', {
+        username: document.getElementById('newUsername').value
+      })
+        .then(({ data }) => {
+          localStorage.setItem('user', data.insertId)
+          document.getElementById('signUpForm').style.display = 'none'
+          document.getElementById('signInForm').style.display = 'none'
+          document.getElementById('signOut').style.display = 'block'
+        })
+    })
+
+    document.getElementById('signOut').addEventListener('click', () => {
+      localStorage.removeItem('user')
+      document.getElementById('groceries').innerHTML = ''
+      document.getElementById('signUpForm').style.display = 'block'
+      document.getElementById('signInForm').style.display = 'block'
+      document.getElementById('signOut').style.display = 'none'
+    })
+
+    checkUser()
+
   </script>
 </body>
+
 </html>
