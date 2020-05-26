@@ -1,7 +1,9 @@
 const router = require('express').Router()
-const db = require('../db')
-
+// const db = require('../db')
+const orm = require('../orm')
 // User routes here...
+
+
 router.get('/users/:selector', (req, res) => {
   let query = {}
 
@@ -10,22 +12,32 @@ router.get('/users/:selector', (req, res) => {
   } else {
     query = { username: req.params.selector }
   }
-  
-  db.query('SELECT * FROM users WHERE ?', query, (err, data) => {
-    if (err) { console.log(err) }
+
+  orm.getAllWhere('users', query, data => {
     let user = data[0]
-    db.query('SELECT * FROM groceries WHERE ?', { userid: user.id }, (err, groceries) => {
-      if (err) { console.log(err) }
-      res.json({ user,  groceries })
+    orm.getAllWhere('groceries', { userid: user.id }, groceries => {
+      res.json({ user, groceries })
     })
   })
+  
+  // db.query('SELECT * FROM users WHERE ?', query, (err, data) => {
+  //   if (err) { console.log(err) }
+  //   let user = data[0]
+  //   db.query('SELECT * FROM groceries WHERE ?', { userid: user.id }, (err, groceries) => {
+  //     if (err) { console.log(err) }
+  //     res.json({ user,  groceries })
+  //   })
+  // })
 })
 
 router.post('/users', (req, res) => {
-  db.query('INSERT INTO users SET ?', req.body, (err, info) => {
-    if (err) { console.log(err) }
+  orm.createOne('users', req.body, info => {
     res.json(info)
   })
+  // db.query('INSERT INTO users SET ?', req.body, (err, info) => {
+  //   if (err) { console.log(err) }
+  //   res.json(info)
+  // })
 })
 
 
