@@ -14,5 +14,5 @@ CREATE TABLE groceries (
   name VARCHAR(30) NOT NULL,
   quantity INT NOT NULL,
   userid INT NOT NULL,
-  FOREIGN KEY userid REFERENCES users(id)
+  FOREIGN KEY (userid) REFERENCES users(id)
 );
